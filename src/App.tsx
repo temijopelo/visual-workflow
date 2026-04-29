@@ -21,7 +21,15 @@ function App() {
     clearGraph,
     importGraph,
   } = useGraph();
-  const { resetViewport } = useCanvas();
+  const {
+    viewport,
+    screenToCanvas,
+    startPan,
+    movePan,
+    endPan,
+    handleWheel,
+    resetViewport,
+  } = useCanvas();
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [toasts, setToasts] = useState<
     { id: string; message: string; type: ToastType }[]
@@ -149,6 +157,12 @@ function App() {
         onConnectionAdd={handleConnectionAdd}
         onEdgeDelete={handleEdgeDelete}
         onAddNodeAtPosition={handleAddNodeAtPosition}
+        viewport={viewport}
+        screenToCanvas={screenToCanvas}
+        startPan={startPan}
+        movePan={movePan}
+        endPan={endPan}
+        handleWheel={handleWheel}
       />
 
       {selectedNode && (

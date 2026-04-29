@@ -31,6 +31,32 @@ export interface CanvasProps {
     type: string,
     position: { x: number; y: number },
   ) => void;
+  viewport: { x: number; y: number; zoom: number };
+  screenToCanvas: ({
+    screenX,
+    screenY,
+    vp,
+  }: {
+    screenX: number;
+    screenY: number;
+    vp?: { x: number; y: number; zoom: number };
+  }) => { x: number; y: number };
+  startPan: ({
+    screenX,
+    screenY,
+  }: {
+    screenX: number;
+    screenY: number;
+  }) => void;
+  movePan: ({ screenX, screenY }: { screenX: number; screenY: number }) => void;
+  endPan: () => void;
+  handleWheel: ({
+    e,
+    canvasRect,
+  }: {
+    e: React.WheelEvent<HTMLDivElement>;
+    canvasRect: DOMRect;
+  }) => void;
 }
 
 export interface WorkflowNodeProps {

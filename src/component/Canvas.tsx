@@ -1,5 +1,4 @@
 import { useCallback, useRef, useState } from "react";
-import useCanvas from "../hooks/useCanvas";
 import type { CanvasProps } from "../types";
 import EdgeRenderer from "./EdgeRenderer";
 import WorkflowNode from "./WorkflowNode";
@@ -16,10 +15,14 @@ export default function Canvas({
   onConnectionAdd,
   onEdgeDelete,
   onAddNodeAtPosition,
+  viewport,
+  screenToCanvas,
+  startPan,
+  movePan,
+  endPan,
+  handleWheel,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const { viewport, screenToCanvas, startPan, movePan, endPan, handleWheel } =
-    useCanvas();
 
   const [connectingFrom, setConnectingFrom] = useState<{
     nodeId: string;
