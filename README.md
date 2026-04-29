@@ -2,6 +2,17 @@
 
 A powerful, interactive visual workflow builder for designing and managing complex node-based workflows. Create workflows by connecting trigger nodes, action nodes, and output nodes with an intuitive drag-and-drop interface.
 
+## Approach
+
+The app is split into two state domains:
+
+- `useGraph` owns workflow data: nodes, edges, import/export, validation, and persistence.
+- `useCanvas` owns viewport behavior: pan, zoom, coordinate conversion, and reset view.
+
+`App.tsx` acts as the coordinator. It owns shared UI state like selection and toasts, passes graph callbacks down to the toolbar and canvas, and keeps the canvas viewport in one place so Reset View always affects the visible zoom/pan state.
+
+This keeps the interaction model predictable: graph edits stay separate from viewport controls, but the toolbar, canvas, and properties panel still react to the same workflow state.
+
 ## 🎯 Features
 
 - **Node-Based Workflow Design**: Create workflows using Trigger → Action → Output node patterns
@@ -113,6 +124,8 @@ npm run dev
 
 This starts the Vite development server with HMR. Open your browser to the displayed URL.
 
+If you want to preview a production build locally, run `npm run build` first and then `npm run preview`.
+
 ### Building
 
 ```bash
@@ -190,9 +203,15 @@ The project is fully typed with TypeScript. Key prop interfaces are defined in `
 
 ### State Management
 
-- **Graph state**: Managed by `useGraph` hook (nodes, edges, operations)
-- **UI state**: Managed by React `useState` in components (selections, toasts)
-- **Viewport state**: Managed by `useCanvas` hook (pan, zoom)
+- **Graph state**: Managed by `useGraph` hook for nodes, edges, validation, and persistence.
+- **Viewport state**: Managed by `useCanvas` hook, but owned at the app level so the toolbar and canvas reset the same viewport.
+- **UI state**: Managed by React `useState` in `App.tsx` for selection and toasts.
+
+### Tradeoffs
+
+- The current design keeps state simple and local, which makes it easy to follow, but it means cross-cutting behavior has to be wired through `App.tsx`.
+- SVG rendering is straightforward and precise for this scale, but it is not the best choice if the graph grows to hundreds or thousands of nodes.
+- Validation is intentionally strict to preserve a DAG-style workflow model, which reduces flexibility in exchange for fewer invalid graphs.
 
 ### CSS Architecture
 
@@ -213,6 +232,14 @@ The project is fully typed with TypeScript. Key prop interfaces are defined in `
 **Q: Canvas is zoomed in too much, where am I?**
 
 - Click the Reset View button (⊹) in the toolbar to reset to default zoom/pan.
+
+## Running Locally
+
+1. Install dependencies with `npm install`.
+2. Start the development server with `npm run dev`.
+3. Open the local URL printed in the terminal.
+4. Optionally build for production with `npm run build`.
+5. Optionally preview the production build with `npm run preview`.
 
 ## 📝 License
 
